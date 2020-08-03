@@ -97,10 +97,3 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 }
-
-Mat stitch_image(Mat image1, Mat image2, Mat H) {
-    cv::Mat result;
-    warpPerspective(image1, result, H, cv::Size(image1.cols + image2.cols, image1.rows));
-    cv::Mat half(result, cv::Rect(0, 0, image2.cols, image2.rows));
-    image2.copyTo(half);
-}
