@@ -82,17 +82,6 @@ int main(int argc, char* argv[])
             matchedDst.push_back(dst);
         }
 
-//        Mat result;
-//        for (int i = 0; i < descriptorsMatches.size(); ++i) {
-//            Mat h=findHomography(matchedSrc[i],matchedDst[i],RANSAC);
-//
-//            warpPerspective(images[i+1], result, h.inv(), Size(2*images[i+1].cols +images[i].cols , 2*images[i+1].rows+images[i].rows));
-//
-//            Mat roi1(result, Rect(0, images[i].rows, images[i].cols, images[i].rows));
-//            images[i].copyTo(roi1);
-//        }
-//        imwrite("result.jpg",result);
-
         Mat result;
         for (int i = 0; i < descriptorsMatches.size(); ++i) {
             Mat h=findHomography(matchedSrc[i],matchedDst[i],RANSAC);
@@ -107,4 +96,11 @@ int main(int argc, char* argv[])
         cout << "No images were provided" << endl;
         return EXIT_FAILURE;
     }
+}
+
+Mat stitch_image(Mat image1, Mat image2, Mat H) {
+    cv::Mat result;
+    warpPerspective(image1, result, H, cv::Size(image1.cols + image2.cols, image1.rows));
+    cv::Mat half(result, cv::Rect(0, 0, image2.cols, image2.rows));
+    image2.copyTo(half);
 }
