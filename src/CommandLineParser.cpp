@@ -6,9 +6,7 @@
 #include <boost/program_options.hpp>
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
-#include <opencv2/opencv.hpp>
 #include <opencv2/stitching.hpp>
-#include "opencv2/features2d/features2d.hpp"
 
 #include "CommandLineParser.h"
 
@@ -39,7 +37,7 @@ int imageStitcher::CommandLineParser::ParseImages(std::vector<cv::Mat>& images)
     }
     else if (vm.count("images"))
     {
-        std::vector<std::string> image_names = vm["images"].as<std::vector<std::string>>();
+        const auto image_names = vm["images"].as<std::vector<std::string>>();
         for (auto & image_name : image_names)
         {
             auto img = cv::imread(cv::samples::findFile(image_name));

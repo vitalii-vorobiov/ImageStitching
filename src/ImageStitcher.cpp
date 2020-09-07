@@ -54,7 +54,7 @@ int imageStitcher::ImageStitcher::combineImages( std::vector<std::vector<cv::DMa
 {
     for (int i = 0; i < descriptorsMatches.size(); ++i)
     {
-        cv::Mat h=findHomography(matchedSrc[i], matchedDst[i], cv::RANSAC);
+        auto h = findHomography(matchedSrc[i], matchedDst[i], cv::RANSAC);
 //        warpPerspective(images[i+1], result, h.inv(), cv::Size(2*images[i+1].cols +images[i].cols , 2*images[i+1].rows+images[i].rows));
         warpPerspective(images[i+1], result, h.inv(), cv::Size(images[i].cols*3, images[i].rows*3));
 //        break;
