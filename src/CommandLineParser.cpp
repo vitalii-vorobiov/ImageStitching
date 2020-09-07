@@ -14,12 +14,14 @@
 
 namespace po = boost::program_options;
 
-imageStitcher::CommandLineParser::CommandLineParser(int argc, char** argv) {
+imageStitcher::CommandLineParser::CommandLineParser(int argc, char** argv)
+{
     this->argc = argc;
     this->argv = argv;
 }
 
-int imageStitcher::CommandLineParser::ParseImages(std::vector<cv::Mat>& images) {
+int imageStitcher::CommandLineParser::ParseImages(std::vector<cv::Mat>& images)
+{
     po::options_description desc("General options");
     desc.add_options()
             ("help,h", "Show help")
@@ -38,9 +40,11 @@ int imageStitcher::CommandLineParser::ParseImages(std::vector<cv::Mat>& images) 
     else if (vm.count("images"))
     {
         std::vector<std::string> image_names = vm["images"].as<std::vector<std::string>>();
-        for (auto & image_name : image_names) {
-            cv::Mat img = cv::imread(cv::samples::findFile(image_name));
-            if (img.empty()) {
+        for (auto & image_name : image_names)
+        {
+            auto img = cv::imread(cv::samples::findFile(image_name));
+            if (img.empty())
+            {
                 std::cout << "Can't read image '" << image_name << std::endl;
                 return EXIT_FAILURE;
             }

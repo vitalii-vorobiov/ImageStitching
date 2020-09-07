@@ -18,7 +18,8 @@ int main(int argc, char** argv)
 
     cv::Mat result = images[0];
 
-    for (int i = 1; i < images.size(); ++i) {
+    for (int i = 1; i < images.size(); ++i)
+    {
         std::vector<cv::Mat> img;
         img.push_back(std::move(result));
         img.push_back(std::move(images[i]));
@@ -31,7 +32,8 @@ int main(int argc, char** argv)
         std::vector<std::vector<cv::DMatch>> descriptorsMatches;
         imageStitcher.matchDescriptors(descriptorsMatches, bfMatcher, keypoints, descriptors);
 
-        for (int i = 0; i < descriptorsMatches.size(); ++i) {
+        for (int i = 0; i < descriptorsMatches.size(); ++i)
+        {
             sort(descriptorsMatches[i].begin(), descriptorsMatches[i].end(), sortRuleLambda);
         }
 
@@ -40,6 +42,5 @@ int main(int argc, char** argv)
 
         imageStitcher.combineImages(descriptorsMatches, matchedSrc, matchedDst, img, result);
     }
-
     cv::imwrite("result.jpg",result);
 }

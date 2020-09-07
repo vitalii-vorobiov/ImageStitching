@@ -10,9 +10,11 @@
 
 #include "ImageStitcher.h"
 
-int imageStitcher::ImageStitcher::keypointsAndDescriptors(std::vector<cv::Mat>& images, std::vector<std::vector<cv::KeyPoint>>& keypoints, std::vector<cv::Mat>& descriptors) {
-    cv::Ptr<cv::BRISK> brisk = cv::BRISK::create();
-    for (auto & image : images) {
+int imageStitcher::ImageStitcher::keypointsAndDescriptors(std::vector<cv::Mat>& images, std::vector<std::vector<cv::KeyPoint>>& keypoints, std::vector<cv::Mat>& descriptors)
+{
+    auto brisk = cv::BRISK::create();
+    for (auto & image : images)
+    {
         std::vector<cv::KeyPoint> keypoint;
         cv::Mat descriptor;
         brisk->detectAndCompute(image, cv::Mat(), keypoint, descriptor);
@@ -22,20 +24,20 @@ int imageStitcher::ImageStitcher::keypointsAndDescriptors(std::vector<cv::Mat>& 
     return 0;
 }
 
-int imageStitcher::ImageStitcher::matchDescriptors(std::vector<std::vector<cv::DMatch>> &descriptorsMatches, cv::BFMatcher bfMatcher, std::vector<std::vector<cv::KeyPoint>>& keypoints, std::vector<cv::Mat>& descriptors) {
-    for (int i = 0; i < descriptors.size() - 1; ++i) {
+int imageStitcher::ImageStitcher::matchDescriptors(std::vector<std::vector<cv::DMatch>> &descriptorsMatches, cv::BFMatcher bfMatcher, std::vector<std::vector<cv::KeyPoint>>& keypoints, std::vector<cv::Mat>& descriptors)
+{
+    for (int i = 0; i < descriptors.size() - 1; ++i)
+    {
         std::vector<cv::DMatch> match;
         bfMatcher.match(descriptors[i], descriptors[i + 1], match);
         descriptorsMatches.push_back(std::move(match));
     }
 }
 
-int imageStitcher::ImageStitcher::matchedSrcDst(std::vector<std::vector<cv::Point2f>> &matchedSrc,
-                                                std::vector<std::vector<cv::Point2f>> &matchedDst,
-                                                std::vector<std::vector<cv::DMatch>> &descriptorsMatches,
-                                                std::vector<std::vector<cv::KeyPoint>> &keypoints,
-                                                std::vector<cv::Mat> &images) {
-    for (int i = 0; i < descriptorsMatches.size(); ++i) {
+int imageStitcher::ImageStitcher::matchedSrcDst(std::vector<std::vector<cv::Point2f>> &matchedSrc, std::vector<std::vector<cv::Point2f>> &matchedDst, std::vector<std::vector<cv::DMatch>> &descriptorsMatches, std::vector<std::vector<cv::KeyPoint>> &keypoints, std::vector<cv::Mat> &images)
+{
+    for (int i = 0; i < descriptorsMatches.size(); ++i)
+    {
         std::vector<cv::Point2f> src,dst;
         for (int j = 0; j < descriptorsMatches[i].size()/2; j++)
         {
@@ -48,16 +50,11 @@ int imageStitcher::ImageStitcher::matchedSrcDst(std::vector<std::vector<cv::Poin
     return 0;
 }
 
-int imageStitcher::ImageStitcher::combineImages(
-        std::vector<std::vector<cv::DMatch>> &descriptorsMatches,
-        std::vector<std::vector<cv::Point2f>> &matchedSrc,
-        std::vector<std::vector<cv::Point2f>> &matchedDst,
-        std::vector<cv::Mat> &images,
-        cv::Mat &result
-        ) {
-    for (int i = 0; i < descriptorsMatches.size(); ++i) {
+int imageStitcher::ImageStitcher::combineImages( std::vector<std::vector<cv::DMatch>> &descriptorsMatches, std::vector<std::vector<cv::Point2f>> &matchedSrc, std::vector<std::vector<cv::Point2f>> &matchedDst, std::vector<cv::Mat> &images, cv::Mat &result)
+{
+    for (int i = 0; i < descriptorsMatches.size(); ++i)
+    {
         cv::Mat h=findHomography(matchedSrc[i], matchedDst[i], cv::RANSAC);
-
 //        warpPerspective(images[i+1], result, h.inv(), cv::Size(2*images[i+1].cols +images[i].cols , 2*images[i+1].rows+images[i].rows));
         warpPerspective(images[i+1], result, h.inv(), cv::Size(images[i].cols*3, images[i].rows*3));
 //        break;

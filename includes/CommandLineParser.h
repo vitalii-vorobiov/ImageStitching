@@ -5,8 +5,10 @@
 #ifndef IMAGESTITCHER_COMMANDLINEPARSER_H
 #define IMAGESTITCHER_COMMANDLINEPARSER_H
 
-namespace imageStitcher {
-    class CommandLineParser {
+namespace imageStitcher
+{
+    class CommandLineParser
+    {
     private:
         int argc;
         char** argv;
