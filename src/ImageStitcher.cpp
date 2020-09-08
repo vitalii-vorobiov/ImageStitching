@@ -10,6 +10,7 @@
 
 #include "ImageStitcher.h"
 
+// Calculate keypoints and descriptors if each image
 int imageStitcher::ImageStitcher::keypointsAndDescriptors(std::vector<cv::Mat>& images, std::vector<std::vector<cv::KeyPoint>>& keypoints, std::vector<cv::Mat>& descriptors)
 {
     auto brisk = cv::BRISK::create();
@@ -24,6 +25,7 @@ int imageStitcher::ImageStitcher::keypointsAndDescriptors(std::vector<cv::Mat>& 
     return 0;
 }
 
+// Takes two neighbour images and match their descriptors
 int imageStitcher::ImageStitcher::matchDescriptors(std::vector<std::vector<cv::DMatch>> &descriptorsMatches, cv::BFMatcher bfMatcher, std::vector<std::vector<cv::KeyPoint>>& keypoints, std::vector<cv::Mat>& descriptors)
 {
     for (int i = 0; i < descriptors.size() - 1; ++i)
@@ -33,6 +35,7 @@ int imageStitcher::ImageStitcher::matchDescriptors(std::vector<std::vector<cv::D
         descriptorsMatches.push_back(std::move(match));
     }
 }
+
 
 int imageStitcher::ImageStitcher::matchedSrcDst(std::vector<std::vector<cv::Point2f>> &matchedSrc, std::vector<std::vector<cv::Point2f>> &matchedDst, std::vector<std::vector<cv::DMatch>> &descriptorsMatches, std::vector<std::vector<cv::KeyPoint>> &keypoints, std::vector<cv::Mat> &images)
 {
@@ -55,11 +58,12 @@ int imageStitcher::ImageStitcher::combineImages( std::vector<std::vector<cv::DMa
     for (int i = 0; i < descriptorsMatches.size(); ++i)
     {
         auto h = findHomography(matchedSrc[i], matchedDst[i], cv::RANSAC);
+        std::cout << "Result size before: " << result.size << std::endl;
+        std::cout << "Images[i+1] size before: " << images[i+1].size << std::endl;
 //        warpPerspective(images[i+1], result, h.inv(), cv::Size(2*images[i+1].cols +images[i].cols , 2*images[i+1].rows+images[i].rows));
         warpPerspective(images[i+1], result, h.inv(), cv::Size(images[i].cols*3, images[i].rows*3));
-//        break;
-        std::cout << images[i].rows << std::endl;
-        std::cout << images[i].cols << std::endl;
+        std::cout << "Result size after: " << result.size << std::endl;
+        std::cout << "Images[i+1] size after: " << images[i+1].size << std::endl;
         cv::Mat roi1(result, cv::Rect(0, images[i].rows, images[i].cols, images[i].rows));
         images[i].copyTo(roi1);
     }

@@ -55,6 +55,4 @@ int imageStitcher::CommandLineParser::ParseImages(std::vector<cv::Mat>& images)
         std::cout << "No images were provided" << std::endl;
         return EXIT_FAILURE;
     }
-
-    return EXIT_SUCCESS;
 }
